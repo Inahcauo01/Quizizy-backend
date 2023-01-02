@@ -1,15 +1,3 @@
-let questions;
-let xhr = new XMLHttpRequest();
-xhr.open("GET", "../app/controller/question.json", false);
-xhr.onreadystatechange = ()=>{
-  if(xhr.readyState == 4 && xhr.status == 200){
-    questions = JSON.parse(xhr.responseText);
-  }else{
-    console.log("hhhh")
-  }
-}
-xhr.send(null)
-console.log(questions);
 //-------------declaration des variables--------------
 let start     = document.querySelector(".start")
 let next      = document.querySelector(".next");
@@ -358,3 +346,17 @@ function darklight(elm){
     darkM = false;
   }
 }
+
+//-------------------Dark/light mode-------------------
+let questions;
+let xhr = new XMLHttpRequest();
+xhr.open("GET", "../app/controller/question.json", false);
+xhr.onreadystatechange = ()=>{
+  if(xhr.readyState == 4 && xhr.status == 200){
+    questions = JSON.parse(xhr.responseText);
+  }else{
+    console.log("hhhh")
+  }
+}
+xhr.send(null)
+console.log(questions);

@@ -4,6 +4,6 @@ session_start();
 
 require_once ('config/config.php');
 require_once ('model/Database.class.php');
-
+require_once ('controller/script.php');
 
 ?>
