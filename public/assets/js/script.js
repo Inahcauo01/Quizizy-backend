@@ -223,7 +223,7 @@ function showResult(){
 
               if(repToCompare[index].id == crt.id_crt && repToCompare[index].rep == crt.correcte){
                 console.log("correcte")
-                document.querySelector("#correction-"+(index)).classList.add("faux");
+                document.querySelector("#correction-"+(index)).classList.add("correct");
                 console.log(index)
                 score++;
               }else{
