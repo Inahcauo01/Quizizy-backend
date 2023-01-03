@@ -194,12 +194,6 @@ function showResult(){
     // recupere table de correction
     let correctArray= getCorrect();
 
-    // le high score
-    if(score > localStorage.getItem("score"))   highScore();
-    scoreText.innerHTML = score;
-    hsNom.innerHTML     = localStorage.getItem("nom")
-    hsScore.innerHTML   = localStorage.getItem("score")
-
     if(triche){
       //le cas de tricher (changer la page) lors du test
       correctionC.innerHTML += `
@@ -223,14 +217,29 @@ function showResult(){
                   <div class="correction" id="correction-${index}">${crt.explication}</div>
                   `;
               }
+              console.log("\n")
+              console.log(repToCompare[index].id + repToCompare[index].rep)
+              console.log(crt.id_crt + crt.correcte)
+
+              if(repToCompare[index].id == crt.id_crt && repToCompare[index].rep == crt.correcte){
+                console.log("correcte")
+                document.querySelector("#correction-"+(index)).classList.add("faux");
+                console.log(index)
+                score++;
+              }else{
+                console.log("faux")
+                console.log(index)
+              }
            });
-          repToCompare.forEach(element => {
-            if(element == index){
-              document.querySelector("#correction-"+(index)).classList.add("faux");
-            }
-          });
+          
       })
 
+      // le high score
+      if(score > localStorage.getItem("score"))   highScore();
+        scoreText.innerHTML = score;
+        hsNom.innerHTML     = localStorage.getItem("nom")
+        hsScore.innerHTML   = localStorage.getItem("score")
+        
       let scorePerCent = ((score*100)/(shuffledArr.length));
       if(scorePerCent <= 30) {
         bgColor(1)
