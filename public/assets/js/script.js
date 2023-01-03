@@ -1,7 +1,21 @@
+//-------------------Fetting data from table-------------
+let questions;
+let correctArray;
+
+let xhr = new XMLHttpRequest();
+xhr.open("GET", "question.json", false);
+xhr.onreadystatechange = ()=>{
+  if(xhr.readyState == 4 && xhr.status == 200){
+    questions = JSON.parse(xhr.responseText);
+  }
+  // else  console.log("erreur lors du recuperation des donnees")
+}
+xhr.send(null)
+
 //-------------declaration des variables--------------
 let start     = document.querySelector(".start")
 let next      = document.querySelector(".next");
-let previous  =  document.querySelector(".previous");
+let previous  = document.querySelector(".previous");
 let one       = document.querySelector(".one");
 let two       = document.querySelector(".two");
 let three     = document.querySelector(".three");
@@ -29,13 +43,14 @@ let score       = 0;
 let timeOut;
 let timer;
 let res = [];
-
 let triche=false;
 let darkM=false;
 
 let username = document.querySelector("#input-username");
 let hsNom    = document.querySelector(".highScore-nom");
 let hsScore  = document.querySelector(".highScore-score");
+
+let repToCompare = []
 
 //--------------------stepper next---------------------
 next.addEventListener("click",()=>{
@@ -115,14 +130,18 @@ let shuffledArr = questions.sort(()=> Math.random() - 0.5)
 //-------------verification des questions--------------
 function checkQuestion(elm){  
   //index = elm.id
-  if(elm.textContent == shuffledArr[elm.id].correct){
-    console.log((elm.id)+" correct");
-    score++
-  }else{
-    res.push((elm.id))
-    console.log((elm.id)+" faux");
-  }
+    // enragistrer les reponses des users
+    repToCompare.push({id: elm.id,rep: elm.textContent});
+    // console.log(repToCompare)
+
+  // if(elm.textContent == shuffledArr[elm.id].correct){
+  //   console.log((elm.id)+" correct");
+  //   score++
+  // }else{
+  //   res.push((elm.id))
+  //   console.log((elm.id)+" faux");}
   createQuestion()
+  
 }
 
 //---------creation des questions aleatoires-----------
@@ -151,14 +170,11 @@ function display(index){
   indexQst ++;
 
   question.innerHTML = shuffledArr[index].question;
-  // reponses.innerHTML = `<button class="rep reponse1" id="${index}" onclick="checkQuestion(this)">${shuffledArr[index].choiceA}</button>
-  //                       <button class="rep reponse2" id="${index}" onclick="checkQuestion(this)">${shuffledArr[index].choiceB}</button>
-  //                       <button class="rep reponse3" id="${index}" onclick="checkQuestion(this)">${shuffledArr[index].choiceC}</button>
-  //                       <button class="rep reponse4" id="${index}" onclick="checkQuestion(this)">${shuffledArr[index].choiceD}</button>`;
-  document.querySelector(".reponse1").innerHTML =  shuffledArr[index].choiceA;      document.querySelector(".reponse1").setAttribute("id",index);
-  document.querySelector(".reponse2").innerHTML =  shuffledArr[index].choiceB;      document.querySelector(".reponse2").setAttribute("id",index);
-  document.querySelector(".reponse3").innerHTML =  shuffledArr[index].choiceC;      document.querySelector(".reponse3").setAttribute("id",index);
-  document.querySelector(".reponse4").innerHTML =  shuffledArr[index].choiceD;      document.querySelector(".reponse4").setAttribute("id",index);
+  
+  document.querySelector(".reponse1").innerHTML =  shuffledArr[index].choiceA;      document.querySelector(".reponse1").setAttribute("id",shuffledArr[index].id);
+  document.querySelector(".reponse2").innerHTML =  shuffledArr[index].choiceB;      document.querySelector(".reponse2").setAttribute("id",shuffledArr[index].id);
+  document.querySelector(".reponse3").innerHTML =  shuffledArr[index].choiceC;      document.querySelector(".reponse3").setAttribute("id",shuffledArr[index].id);
+  document.querySelector(".reponse4").innerHTML =  shuffledArr[index].choiceD;      document.querySelector(".reponse4").setAttribute("id",shuffledArr[index].id);
 
   countDown(5);
   timeOut = setTimeout(() => {
@@ -174,6 +190,10 @@ function showResult(){
     iconStep4.classList.add("color")
     progress.classList.add("hide")
     countDown(-1)
+
+    // recupere table de correction
+    let correctArray= getCorrect();
+
     // le high score
     if(score > localStorage.getItem("score"))   highScore();
     scoreText.innerHTML = score;
@@ -187,23 +207,30 @@ function showResult(){
       <div style="color:tomato">Vous n'êtes pas respecté les régles de ce quiz !</div>`;
       bgColor(1);
       scoreText.innerHTML = "0";
-      document.querySelector(".four").style.backgroundColor ="none"
-      document.querySelector(".four").style.boxShadow  ="none"
+      document.querySelector(".four").style.backgroundColor = "none"
+      document.querySelector(".four").style.boxShadow       = "none"
     }else{
       //le cas normal (n ya pas de triche)
       document.querySelector(".stepper").classList.add("res-four")
+      
       shuffledArr.forEach((elm,index) =>{
-          correctionC.innerHTML += 
-          `<div class="qst-corr">${index+1}) ${elm.question}</div>
-          <div class="correction" id="correction-${index}">
-            ${elm.justif}
-          </div>`;
-          res.forEach(element => {
+          
+          //  console.log(elm.id)
+           correctArray.forEach(crt => {
+              if(crt.id_crt == elm.id){
+                correctionC.innerHTML +=`
+                  <div class="qst-corr">${index+1}) ${elm.question}</div>
+                  <div class="correction" id="correction-${index}">${crt.explication}</div>
+                  `;
+              }
+           });
+          repToCompare.forEach(element => {
             if(element == index){
               document.querySelector("#correction-"+(index)).classList.add("faux");
             }
           });
       })
+
       let scorePerCent = ((score*100)/(shuffledArr.length));
       if(scorePerCent <= 30) {
         bgColor(1)
@@ -218,6 +245,20 @@ function showResult(){
         scoreText.style.color = "green"
       }
     }
+}
+
+//---------------recuperer la correction---------------
+function getCorrect(){
+  let xhr = new XMLHttpRequest();
+  xhr.open("GET", "correction.json", false);
+  xhr.onreadystatechange = ()=>{
+    if(xhr.readyState == 4 && xhr.status == 200){
+      correctArray = JSON.parse(xhr.responseText);
+        // console.log(correctArray)
+    }
+  }
+  xhr.send(null)
+  return correctArray;
 }
 
 //------------------compte a rebours-------------------
@@ -347,16 +388,3 @@ function darklight(elm){
   }
 }
 
-//-------------------Dark/light mode-------------------
-let questions;
-let xhr = new XMLHttpRequest();
-xhr.open("GET", "../app/controller/question.json", false);
-xhr.onreadystatechange = ()=>{
-  if(xhr.readyState == 4 && xhr.status == 200){
-    questions = JSON.parse(xhr.responseText);
-  }else{
-    console.log("hhhh")
-  }
-}
-xhr.send(null)
-console.log(questions);
