@@ -1,4 +1,8 @@
-<?php include_once '../app/loader.php' ?>
+<?php 
+
+
+include_once '../app/controller/script.php' ;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -51,9 +55,11 @@
                         <li>
                             Ne sort pas de la page lors du test, et chaque sortie considerer comme une triche
                         </li>
-                        <div>
+                        <div style="margin-top: 20px;">
                             <label for="input-username">Enter your name</label>
-                            <input type="text" id="input-username" name="username">
+                            <form action="index.php" method="post">
+                                <input type="text" id="input-username" name="username" required>
+                            </form>
                         </div>
                     </dl>
                 </div>
@@ -97,6 +103,7 @@
     <!-- scripts -->
     
     <!-- <script src="assets/js/data.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/particles.js"></script>
     <script src="assets/js/app.js"></script>

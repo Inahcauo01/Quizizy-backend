@@ -42,7 +42,6 @@ let indexQst    = 0;
 let score       = 0;
 let timeOut;
 let timer;
-let res = [];
 let triche=false;
 let darkM=false;
 
@@ -51,7 +50,7 @@ let hsNom    = document.querySelector(".highScore-nom");
 let hsScore  = document.querySelector(".highScore-score");
 
 let repToCompare = []
-
+let second = 5
 //--------------------stepper next---------------------
 next.addEventListener("click",()=>{
     previous.classList.remove("hide");
@@ -118,9 +117,10 @@ start.addEventListener("click", ()=>{
         next.classList.add("hide")
         start.classList.add("hide")
       
-      desactiverText();
-      display(0)
-      tricher();
+        desactiverText();
+        display(0)
+        tricher();
+        userData()
       
 })
 
@@ -176,14 +176,14 @@ function display(index){
   document.querySelector(".reponse3").innerHTML =  shuffledArr[index].choiceC;      document.querySelector(".reponse3").setAttribute("id",shuffledArr[index].id);
   document.querySelector(".reponse4").innerHTML =  shuffledArr[index].choiceD;      document.querySelector(".reponse4").setAttribute("id",shuffledArr[index].id);
 
-  countDown(30);
+  countDown(second);
   timeOut = setTimeout(() => {
     //le cas de ne pas repondre
-    res.push(index)
-    createQuestion()}, "30000")
+    repToCompare.push({id: index,rep: "undefined"});
+    createQuestion()}, second+"000")
 }
 
-// affichage de resultat
+//---------------affichage de resultat-----------------
 function showResult(){
     steps.forEach(step => { step.classList.add("hide"); });
     four.classList.remove("hide");
@@ -217,21 +217,26 @@ function showResult(){
                   <div class="correction" id="correction-${index}">${crt.explication}</div>
                   `;
               }
-              console.log("\n")
-              console.log(repToCompare[index].id + repToCompare[index].rep)
-              console.log(crt.id_crt + crt.correcte)
-
-              if(repToCompare[index].id == crt.id_crt && repToCompare[index].rep == crt.correcte){
-                console.log("correcte")
-                document.querySelector("#correction-"+(index)).classList.add("correct");
-                console.log(index)
-                score++;
-              }else{
-                console.log("faux")
-                console.log(index)
-              }
+              
+              // if(repToCompare.length > index){
+                // console.log("in")
+                // console.log("repToCompare[index].id : "+repToCompare[index].id);
+                // console.log("crt.id_crt : "+crt.id_crt);
+                // console.log("rep length : "+repToCompare.length)
+                // console.log("index : "+index)
+                if((repToCompare[index].id == crt.id_crt) && (repToCompare[index].rep == crt.correcte)){
+                  console.log("correcte")
+                  document.querySelector("#correction-"+(index)).classList.add("correct");
+                  console.log(index)
+                  score++;
+                }else{
+                  console.log("faux")
+                  console.log(index)
+                }
+              // }
+              
            });
-          
+          console.log("____________")
       })
 
       // le high score
@@ -397,3 +402,18 @@ function darklight(elm){
   }
 }
 
+//----------------------Bonus -------------------------
+function userData(){
+  const name = document.querySelector("#input-username").value;
+  console.log(name);
+  $.ajax({
+      url: "../app/controller/script.php",
+      type: "POST",
+      data: {name: name,},
+      success: function(response) {
+        // Update the table with the data from the server
+        console.log("succes :"+response)
+      }
+    });
+
+}
