@@ -40,10 +40,10 @@ let scoreText   = document.querySelector(".score")
 let correctionC = document.querySelector(".correction-container")
 let indexQst    = 0;
 let score       = 0;
+let triche      = false;
+let darkM       = false;
 let timeOut;
 let timer;
-let triche=false;
-let darkM=false;
 
 let username = document.querySelector("#input-username");
 let hsNom    = document.querySelector(".highScore-nom");

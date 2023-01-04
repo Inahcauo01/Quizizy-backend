@@ -1,13 +1,12 @@
 <?php
 
-// include_once '../model/Database.class.php';
 include_once 'C:\xampp\htdocs\Quizizy-backend\app\model\Database.class.php' ;
 getQuestion();
 
 function getQuestion(){
     $sql    = "SELECT * from questions";
     $sql1   = "SELECT * from corrections";
-    $db     = new Database();
+    $db = new Database();
 
     $questionArray   = $db->getAllrows($sql);
     $correctionArray = $db->getAllrows($sql1);
@@ -24,11 +23,6 @@ if(isset($_POST['name'])){
     // echo "hi";
 
     echo $_POST['name'];
-
-
-
-
-
     //browser
     $u_agent = $_SERVER['HTTP_USER_AGENT'];
     if (strpos($u_agent, 'Chrome') !== false) {
@@ -75,10 +69,24 @@ if(isset($_POST['name'])){
     
     echo "The client is using the following operating system: $os";
 
+    $sql = "INSERT INTO data_user (`username`, `ip_adr`, `browser`, `os`) VALUES (?,?,?,?)";
+    $db = new Database();
+    // $db->insertData($sql,array($_POST['name'],$ip,$browser,$os));
+
     // country
+    
     // $country = $_SERVER['HTTP_CF_IPCOUNTRY'];
-    // echo $country;
+    // echo $country;   
 
 }
+
+$ip = $_SERVER["SERVER_ADDR"];
+if($ip == '::1'){
+    $ipv4 = "127.0.0.1";
+    echo $ipv4;
+}
+echo "The User IP address: " . $ip ."<br>";
+$json =  unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$ipv4"));
+echo $json["geoplugin_countryName"];
 
 ?>

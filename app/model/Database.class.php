@@ -1,5 +1,4 @@
 <?php
-// include_once '../config/config.php';
 include_once 'C:\xampp\htdocs\Quizizy-backend\app\config\config.php';
 class Database{
     private $host=DB_HOST;
@@ -104,14 +103,6 @@ class Database{
 
 
 }
-
-
-
-
-
-
-
-
 
 
 
