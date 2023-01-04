@@ -176,11 +176,11 @@ function display(index){
   document.querySelector(".reponse3").innerHTML =  shuffledArr[index].choiceC;      document.querySelector(".reponse3").setAttribute("id",shuffledArr[index].id);
   document.querySelector(".reponse4").innerHTML =  shuffledArr[index].choiceD;      document.querySelector(".reponse4").setAttribute("id",shuffledArr[index].id);
 
-  countDown(5);
+  countDown(30);
   timeOut = setTimeout(() => {
     //le cas de ne pas repondre
     res.push(index)
-    createQuestion()}, "5000")
+    createQuestion()}, "30000")
 }
 
 // affichage de resultat

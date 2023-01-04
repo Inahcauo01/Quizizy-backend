@@ -221,7 +221,7 @@ ul {
   background-color: #90b4ce;
   border-radius: 0px 10px 10px 0px;
   color: white;
-  border-left: 6px solid greenyellow;
+  border-left: 6px solid crimson;
   font-size: 15px;
 }
 
@@ -232,8 +232,8 @@ ul {
   margin: 12px 0 -4px 0;
 }
 
-.faux {
-  border-left: 6px solid crimson;
+.correct {
+  border-left: 6px solid greenyellow;
 }
 
 .res-four {
