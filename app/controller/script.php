@@ -23,24 +23,28 @@ if(isset($_POST['name'])){
     // echo "hi";
 
     echo $_POST['name'];
+    echo "score :".$_POST['score'];
     //browser
     $u_agent = $_SERVER['HTTP_USER_AGENT'];
-    if (strpos($u_agent, 'Chrome') !== false) {
-        $browser = 'Chrome';
-    } elseif (strpos($u_agent, 'Firefox') !== false) {
-        $browser = 'Firefox';
-    } elseif (strpos($u_agent, 'Safari') !== false) {
-        $browser = 'Safari';
-    } elseif (strpos($u_agent, 'Trident') !== false) {
-        $browser = 'Internet Explorer';
-    } else {
-        $browser = 'Other';
-    }
-    echo "The client is using the following browser: $browser <br>";
+    $browsers = [
+        '/msie/i' => 'Internet explorer',
+        '/firefox/i' => 'Firefox',
+        '/safari/i' => 'Safari',
+        '/chrome/i' => 'Chrome',
+        '/edg/i' => 'Edge',
+        '/opr/i' => 'Opera',
+        '/mobile/i' => 'Mobile browser',
+      ];
+   
+      foreach ($browsers as $regex => $value) {
+        if (preg_match($regex, $u_agent)) {
+          $browser = $value;
+        }
+      }
 
     // @ip
     $ip = $_SERVER["REMOTE_ADDR"];
-    echo "The User IP address: " . $ip ."<br>";
+    // echo "The User IP address: " . $ip ."<br>";
 
     // OS
     if (preg_match('/linux/i', $u_agent)) {
@@ -67,26 +71,14 @@ if(isset($_POST['name'])){
         $os = 'Autre OS';
     }
     
-    echo "The client is using the following operating system: $os";
 
-    $sql = "INSERT INTO data_user (`username`, `ip_adr`, `browser`, `os`) VALUES (?,?,?,?)";
+    $json =  unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip='$ip'"));
+
+
+    $sql = "INSERT INTO data_user (`username`, `ip_adr`, `browser`, `os`,`country`,`region`,`city`,	`score`) VALUES (?,?,?,?,?,?,?,?)";
     $db = new Database();
-    // $db->insertData($sql,array($_POST['name'],$ip,$browser,$os));
-
-    // country
-    
-    // $country = $_SERVER['HTTP_CF_IPCOUNTRY'];
-    // echo $country;   
+    $db->insertData($sql,array($_POST['name'],$ip,$browser,$os,$json["geoplugin_countryName"],$json["geoplugin_region"],$json["geoplugin_city"], $_POST['score']));
 
 }
-
-$ip = $_SERVER["SERVER_ADDR"];
-if($ip == '::1'){
-    $ipv4 = "127.0.0.1";
-    echo $ipv4;
-}
-echo "The User IP address: " . $ip ."<br>";
-$json =  unserialize(file_get_contents("http://www.geoplugin.net/php.gp?ip=$ipv4"));
-echo $json["geoplugin_countryName"];
 
 ?>

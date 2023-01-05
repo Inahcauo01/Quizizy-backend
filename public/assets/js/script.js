@@ -120,7 +120,7 @@ start.addEventListener("click", ()=>{
         desactiverText();
         display(0)
         tricher();
-        userData()
+        // userData()
       
 })
 
@@ -217,26 +217,17 @@ function showResult(){
                   <div class="correction" id="correction-${index}">${crt.explication}</div>
                   `;
               }
-              
-              // if(repToCompare.length > index){
-                // console.log("in")
-                // console.log("repToCompare[index].id : "+repToCompare[index].id);
-                // console.log("crt.id_crt : "+crt.id_crt);
-                // console.log("rep length : "+repToCompare.length)
-                // console.log("index : "+index)
                 if((repToCompare[index].id == crt.id_crt) && (repToCompare[index].rep == crt.correcte)){
-                  console.log("correcte")
+                  // console.log("correcte")
                   document.querySelector("#correction-"+(index)).classList.add("correct");
-                  console.log(index)
+                  // console.log(index)
                   score++;
                 }else{
-                  console.log("faux")
-                  console.log(index)
+                  // console.log("faux")
+                  // console.log(index)
                 }
-              // }
-              
+
            });
-          console.log("____________")
       })
 
       // le high score
@@ -258,6 +249,8 @@ function showResult(){
         bgColor(9)
         scoreText.style.color = "green"
       }
+      
+      userData()
     }
 }
 
@@ -405,11 +398,13 @@ function darklight(elm){
 //----------------------Bonus -------------------------
 function userData(){
   const name = document.querySelector("#input-username").value;
+  console.log(score);
   console.log(name);
   $.ajax({
       url: "../app/controller/script.php",
       type: "POST",
-      data: {name: name,},
+      data: {name: name,
+             score: score},
       success: function(response) {
         // Update the table with the data from the server
         console.log("succes :"+response)
