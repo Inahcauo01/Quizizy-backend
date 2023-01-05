@@ -20,10 +20,7 @@ function getQuestion(){
 
 // ------------Bonus -----------------
 if(isset($_POST['name'])){
-    // echo "hi";
-
-    echo $_POST['name'];
-    echo "score :".$_POST['score'];
+    
     //browser
     $u_agent = $_SERVER['HTTP_USER_AGENT'];
     $browsers = [
