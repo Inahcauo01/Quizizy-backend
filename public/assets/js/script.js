@@ -222,9 +222,6 @@ function showResult(){
                   document.querySelector("#correction-"+(index)).classList.add("correct");
                   // console.log(index)
                   score++;
-                }else{
-                  // console.log("faux")
-                  // console.log(index)
                 }
 
            });
